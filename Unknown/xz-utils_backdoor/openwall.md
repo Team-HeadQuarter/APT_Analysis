@@ -326,4 +326,4 @@ Download attachment "[liblzma_la-crc64-fast.o.gz](https://www.openwall.com/lists
 Download attachment "[detect.sh](https://www.openwall.com/lists/oss-security/2024/03/29/4/3)" of type "application/x-sh" (426 bytes)
 
 ---
-[Go To Top](#openwall)
+[Go To Top ↑](#openwall-post-by-andres-freund)
