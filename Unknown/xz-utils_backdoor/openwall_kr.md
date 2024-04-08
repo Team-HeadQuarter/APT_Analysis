@@ -27,17 +27,21 @@ https://github.com/tukaani-project/xz/releases/tag/v5.6.1
 
 이 스크립트는 실행되고, 몇 가지 선제조건과 일치하면 하부 코드
 
+```
 am__test = bad-3-corrupt_lzma2.xz
 ...
 am__test_dir=$(top_srcdir)/tests/files/$(am__test)
 ...
 sed rpath $(am__test_dir) | $(am__dist_setup) >/dev/null 2>&1
+```
 
-를 포함하기위해 $builddir/src/liblzma/Makefile를 수정합니다.
+를 포함하기위해 `$builddir/src/liblzma/Makefile`를 수정합니다.
 
-이는 
+이는
 
+```
 ...; sed rpath ../../../tests/files/bad-3-corrupt_lzma2.xz | tr "	 \-_" " 	_\-" | xz -d | /bin/bash >/dev/null 2>&1; ...
+```
 
 로 끝납니다.
 
