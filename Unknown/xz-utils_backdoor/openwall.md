@@ -12,8 +12,7 @@ The upstream xz repository and the xz tarballs have been backdoored.
 
 At first I thought this was a compromise of debian's package, but it turns out to be upstream.
 
-<br>
-== Compromised Release Tarball ==
+### == Compromised Release Tarball ==
 
 One portion of the backdoor is *solely in the distributed tarballs*.  
 For easier reference, here's a link to debian's import of the tarball, but it is also present in the tarballs for 5.6.0 and 5.6.1:
@@ -90,8 +89,7 @@ export i="((head -c +1024 >/dev/null) && head -c +2048
 
 After de-obfuscation this leads to the attached injected.txt.
 
-<br>
-== Compromised Repository ==
+### == Compromised Repository ==
 
 The files containing the bulk of the exploit are in an obfuscated form in
 
@@ -121,35 +119,35 @@ Unfortunately the latter looks like the less likely explanation, given they comm
 
 Florian Weimer first extracted the injected code in isolation, also attached,liblzma_la-crc64-fast.o, I had only looked at the whole binary. Thanks!
 
-<br>
-== Affected Systems ==
+### == Affected Systems ==
 
 The attached de-obfuscated script is invoked first after configure, where it decides whether to modify the build process to inject the code.
 
 These conditions include targeting only x86-64 linux:
 
 ```bash
-    if ! (echo "$build" | grep -Eq "^x86_64" > /dev/null 2>&1) && (echo "$build" | grep -Eq "linux-gnu$" > /dev/null 2>&1);then
+if ! (echo "$build" | grep -Eq "^x86_64" > /dev/null 2>&1) &&  
+(echo "$build" | grep -Eq "linux-gnu$" > /dev/null 2>&1);then
 ```
 
 Building with gcc and the gnu linker
 
 ```bash
-    if test "x$GCC" != 'xyes' > /dev/null 2>&1;then
-    exit 0
-    fi
-    if test "x$CC" != 'xgcc' > /dev/null 2>&1;then
-    exit 0
-    fi
-    LDv=$LD" -v"
-    if ! $LDv 2>&1 | grep -qs 'GNU ld' > /dev/null 2>&1;then
-    exit 0
+if test "x$GCC" != 'xyes' > /dev/null 2>&1;then
+exit 0
+fi
+if test "x$CC" != 'xgcc' > /dev/null 2>&1;then
+exit 0
+fi
+LDv=$LD" -v"
+if ! $LDv 2>&1 | grep -qs 'GNU ld' > /dev/null 2>&1;then
+exit 0
 ```
 
 Running as part of a debian or RPM package build:
 
 ```bash
-    if test -f "$srcdir/debian/rules" || test "x$RPM_ARCH" = "xx86_64";then
+if test -f "$srcdir/debian/rules" || test "x$RPM_ARCH" = "xx86_64";then
 ```
 
 Particularly the latter is likely aimed at making it harder to reproduce the issue for investigators.
@@ -224,8 +222,7 @@ env -i LANG=C LD_DEBUG=statistics /usr/sbin/sshd -h
 
 It's possible that `argv[0]` other `/usr/sbin/sshd` also would have effect - there are obviously lots of servers linking to libsystemd.
 
-<br>
-== Analyzing the injected code ==
+### == Analyzing the injected code ==
 
 I am *not* a security researcher, nor a reverse engineer.  There's lots of stuff I have not analyzed and most of what I observed is purely from observation rather than exhaustively analyzing the backdoor code.
 
@@ -273,8 +270,7 @@ It is possible to change the `got.plt` contents at this stage because it has not
 
 I suspect there might be further changes performed at this stage.
 
-<br>
-== Impact on `sshd` ==
+### == Impact on sshd ==
 
 The prior section explains that `RSA_public_decrypt@....plt` was redirected to point into the backdoor code.  
 The trace I was analyzing indeed shows that during a pubkey login the exploit code is invoked:
@@ -299,8 +295,7 @@ Since this is running in a pre-authentication context, it seems likely to allow 
 
 I'd upgrade any potentially vulnerable system ASAP.
 
-<br>
-== Bug reports ==
+### == Bug reports ==
 
 Given the apparent upstream involvement I have not reported an upstream bug.  
 As I initially thought it was a debian specific issue, I sent a more preliminary report to security@...ian.org.  
@@ -309,8 +304,7 @@ CISA was notified by a distribution.
 
 Red Hat assigned this issue CVE-2024-3094.
 
-<br>
-== Detecting if installation is vulnerable ==
+### == Detecting if installation is vulnerable ==
 
 Vegard Nossum wrote a script to detect if it's likely that the ssh binary on a system is vulnerable, attached here. Thanks!
 
