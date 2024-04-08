@@ -10,4 +10,4 @@ APT(Advanced Persistent Threat) Analysis Documents.
 
 ### Unknown APT
 
-1. [xz-utils backdoor](/Unknown/xz-utils_backdoor/openwall_kr.md)(WIP from 24.04.05(Fri))
+1. [xz-utils backdoor](/Unknown/xz-utils_backdoor/)(WIP from 24.04.05(Fri))
