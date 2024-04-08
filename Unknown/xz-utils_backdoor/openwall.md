@@ -12,6 +12,8 @@ The upstream xz repository and the xz tarballs have been backdoored.
 
 At first I thought this was a compromise of debian's package, but it turns out to be upstream.
 
+---
+
 ### == Compromised Release Tarball ==
 
 One portion of the backdoor is *solely in the distributed tarballs*.  
@@ -89,6 +91,8 @@ export i="((head -c +1024 >/dev/null) && head -c +2048
 
 After de-obfuscation this leads to the attached injected.txt.
 
+---
+
 ### == Compromised Repository ==
 
 The files containing the bulk of the exploit are in an obfuscated form in
@@ -118,6 +122,8 @@ Given the activity over several weeks, the committer is either directly involved
 Unfortunately the latter looks like the less likely explanation, given they communicated on various lists about the "fixes" mentioned above.
 
 Florian Weimer first extracted the injected code in isolation, also attached,liblzma_la-crc64-fast.o, I had only looked at the whole binary. Thanks!
+
+---
 
 ### == Affected Systems ==
 
@@ -156,8 +162,9 @@ Due to the working of the injected code (see below), it is likely the backdoor c
 
 Luckily xz 5.6.0 and 5.6.1 have not yet widely been integrated by linux distributions, and where they have, mostly in pre-release versions.
 
-<br>
-== Observing Impact on openssh server ==
+---
+
+### == Observing Impact on openssh server ==
 
 With the backdoored liblzma installed, logins via ssh become a lot slower.
 
@@ -222,6 +229,8 @@ env -i LANG=C LD_DEBUG=statistics /usr/sbin/sshd -h
 
 It's possible that `argv[0]` other `/usr/sbin/sshd` also would have effect - there are obviously lots of servers linking to libsystemd.
 
+---
+
 ### == Analyzing the injected code ==
 
 I am *not* a security researcher, nor a reverse engineer.  There's lots of stuff I have not analyzed and most of what I observed is purely from observation rather than exhaustively analyzing the backdoor code.
@@ -270,6 +279,8 @@ It is possible to change the `got.plt` contents at this stage because it has not
 
 I suspect there might be further changes performed at this stage.
 
+---
+
 ### == Impact on sshd ==
 
 The prior section explains that `RSA_public_decrypt@....plt` was redirected to point into the backdoor code.  
@@ -295,6 +306,8 @@ Since this is running in a pre-authentication context, it seems likely to allow 
 
 I'd upgrade any potentially vulnerable system ASAP.
 
+---
+
 ### == Bug reports ==
 
 Given the apparent upstream involvement I have not reported an upstream bug.  
@@ -304,10 +317,13 @@ CISA was notified by a distribution.
 
 Red Hat assigned this issue CVE-2024-3094.
 
+---
+
 ### == Detecting if installation is vulnerable ==
 
 Vegard Nossum wrote a script to detect if it's likely that the ssh binary on a system is vulnerable, attached here. Thanks!
 
+---
 
 Greetings,
 
