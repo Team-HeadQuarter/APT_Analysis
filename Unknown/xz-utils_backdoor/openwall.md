@@ -158,7 +158,7 @@ if test -f "$srcdir/debian/rules" || test "x$RPM_ARCH" = "xx86_64";then
 
 Particularly the latter is likely aimed at making it harder to reproduce the issue for investigators.
 
-Due to the working of the injected code (see below), it is likely the backdoor can only work on glibc based systems.
+Due to the working of the injected code (see below), it is likely the backdoor can only work on `glibc` based systems.
 
 Luckily xz 5.6.0 and 5.6.1 have not yet widely been integrated by linux distributions, and where they have, mostly in pre-release versions.
 
@@ -166,7 +166,7 @@ Luckily xz 5.6.0 and 5.6.1 have not yet widely been integrated by linux distribu
 
 ### == Observing Impact on openssh server ==
 
-With the backdoored liblzma installed, logins via ssh become a lot slower.
+With the backdoored `liblzma` installed, logins via `ssh` become a lot slower.
 
 ```bash
 time ssh nonexistant@...alhost
@@ -190,14 +190,14 @@ user	0m0.202s
 sys	0m0.006s
 ```
 
-openssh does not directly use liblzma.  
-However debian and several other distributions patch openssh to support systemd notification, and libsystemd does depend on lzma.
+`openssh` does not directly use `liblzma`.  
+However debian and several other distributions patch `openssh` to support `systemd` notification, and `libsystemd` does depend on `lzma`.
 
-Initially starting `sshd` outside of systemd did not show the slowdown, despite the backdoor briefly getting invoked.  
+Initially starting `sshd` outside of `systemd` did not show the slowdown, despite the backdoor briefly getting invoked.  
 This appears to be part of some countermeasures to make analysis harder.
 
 Observed requirements for the exploit:  
-a) TERM environment variable is not set  
+a) `TERM` environment variable is not set  
 b) `argv[0]` needs to be `/usr/sbin/sshd`  
 c) `LD_DEBUG`, `LD_PROFILE` are not set  
 d) `LANG` needs to be set  
@@ -209,7 +209,7 @@ To reproduce outside of systemd, the server can be started with a clear environm
 env -i LANG=en_US.UTF-8 /usr/sbin/sshd -D
 ```
 
-In fact, openssh does not need to be started as a server to observe the slowdown:
+In fact, `openssh` does not need to be started as a server to observe the slowdown:
 
 slow:
 ```bash
@@ -227,7 +227,7 @@ env -i LANG=C LD_DEBUG=statistics /usr/sbin/sshd -h
 (about 0.01s on the same system)
 
 
-It's possible that `argv[0]` other `/usr/sbin/sshd` also would have effect - there are obviously lots of servers linking to libsystemd.
+It's possible that `argv[0]` other `/usr/sbin/sshd` also would have effect - there are obviously lots of servers linking to `libsystemd`.
 
 ---
 
@@ -265,10 +265,8 @@ watch _rtld_global_ro._dl_naudit
 It looks like the audit hook is only installed for the main binary.
 
 That hook gets called, from `_dl_audit_symbind`, for numerous symbols in the main binary.  
-It appears to wait for `RSA_public_decrypt@....plt` to be
-resolved.  
-When called for that symbol, the backdoor changes the value of
-`RSA_public_decrypt@....plt` to point to its own code.  
+It appears to wait for `RSA_public_decrypt@....plt` to be resolved.  
+When called for that symbol, the backdoor changes the value of `RSA_public_decrypt@....plt` to point to its own code.  
 It does not do this via the audit hook mechanism, but outside of it.
 
 For reasons I do not yet understand, it does change `sym.st_value` *and* the return value of from the audit hook to a different value, which leads `_dl_audit_symbind()` to do nothing - why change anything at all then?
@@ -294,6 +292,7 @@ sshd 1736357 [010] 714318.734008:
 ```
 
 The backdoor then calls back into `libcrypto`, presumably to perform normal authentication
+
 ```bash
 sshd 1736357 [010] 714318.734009:
 1  branches:uH:
