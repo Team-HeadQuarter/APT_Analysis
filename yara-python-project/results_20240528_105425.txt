@@ -1,0 +1,428 @@
+PID 1 (Process: systemd) matches rule 'BKDR_XZUtil_Binary_CVE_2024_3094_Mar24_1' with strings:
+  - $op1
+  - $op2
+  - $op3
+  - $xc1
+
+PID 678 (Process: dbus-daemon) matches rule 'BKDR_XZUtil_Binary_CVE_2024_3094_Mar24_1' with strings:
+  - $op1
+  - $op2
+  - $op3
+  - $xc1
+
+PID 467 (Process: systemd-udevd) matches rule 'BKDR_XZUtil_Binary_CVE_2024_3094_Mar24_1' with strings:
+  - $op1
+  - $op2
+  - $op3
+  - $xc1
+
+PID 681 (Process: polkitd) matches rule 'BKDR_XZUtil_Binary_CVE_2024_3094_Mar24_1' with strings:
+  - $op1
+  - $op2
+  - $op3
+  - $xc1
+
+PID 1058 (Process: rtkit-daemon) matches rule 'BKDR_XZUtil_Binary_CVE_2024_3094_Mar24_1' with strings:
+  - $op1
+  - $op2
+  - $op3
+  - $xc1
+
+PID 682 (Process: systemd-logind) matches rule 'BKDR_XZUtil_Binary_CVE_2024_3094_Mar24_1' with strings:
+  - $op1
+  - $op2
+  - $op3
+  - $xc1
+
+PID 677 (Process: accounts-daemon) matches rule 'BKDR_XZUtil_Binary_CVE_2024_3094_Mar24_1' with strings:
+  - $op1
+  - $op2
+  - $op3
+  - $xc1
+
+PID 441 (Process: systemd-journald) matches rule 'BKDR_XZUtil_Binary_CVE_2024_3094_Mar24_1' with strings:
+  - $op1
+  - $op2
+  - $op3
+  - $xc1
+
+PID 1139 (Process: systemd) matches rule 'BKDR_XZUtil_Binary_CVE_2024_3094_Mar24_1' with strings:
+  - $op1
+  - $op2
+  - $op3
+  - $xc1
+
+PID 1156 (Process: pipewire) matches rule 'BKDR_XZUtil_Binary_CVE_2024_3094_Mar24_1' with strings:
+  - $op1
+  - $op2
+  - $op3
+  - $xc1
+
+PID 1161 (Process: dbus-daemon) matches rule 'BKDR_XZUtil_Binary_CVE_2024_3094_Mar24_1' with strings:
+  - $op1
+  - $op2
+  - $op3
+  - $xc1
+
+PID 1140 (Process: (sd-pam)) matches rule 'BKDR_XZUtil_Binary_CVE_2024_3094_Mar24_1' with strings:
+  - $op1
+  - $op2
+  - $op3
+  - $xc1
+
+PID 1160 (Process: gnome-keyring-daemon) matches rule 'BKDR_XZUtil_Binary_CVE_2024_3094_Mar24_1' with strings:
+  - $op1
+  - $op2
+  - $op3
+  - $xc1
+
+PID 760 (Process: NetworkManager) matches rule 'BKDR_XZUtil_Binary_CVE_2024_3094_Mar24_1' with strings:
+  - $op1
+  - $op2
+  - $op3
+  - $xc1
+
+PID 772 (Process: ModemManager) matches rule 'BKDR_XZUtil_Binary_CVE_2024_3094_Mar24_1' with strings:
+  - $op1
+  - $op2
+  - $op3
+  - $xc1
+
+PID 1159 (Process: pipewire-pulse) matches rule 'BKDR_XZUtil_Binary_CVE_2024_3094_Mar24_1' with strings:
+  - $op1
+  - $op2
+  - $op3
+  - $xc1
+
+PID 1254 (Process: dbus-daemon) matches rule 'BKDR_XZUtil_Binary_CVE_2024_3094_Mar24_1' with strings:
+  - $op1
+  - $op2
+  - $op3
+  - $xc1
+
+PID 1155 (Process: pipewire) matches rule 'BKDR_XZUtil_Binary_CVE_2024_3094_Mar24_1' with strings:
+  - $op1
+  - $op2
+  - $op3
+  - $xc1
+
+PID 1247 (Process: at-spi-bus-launcher) matches rule 'BKDR_XZUtil_Binary_CVE_2024_3094_Mar24_1' with strings:
+  - $op1
+  - $op2
+  - $op3
+  - $xc1
+
+PID 1266 (Process: at-spi2-registryd) matches rule 'BKDR_XZUtil_Binary_CVE_2024_3094_Mar24_1' with strings:
+  - $op1
+  - $op2
+  - $op3
+  - $xc1
+
+PID 1186 (Process: xfce4-session) matches rule 'BKDR_XZUtil_Binary_CVE_2024_3094_Mar24_1' with strings:
+  - $op1
+  - $op2
+  - $op3
+  - $xc1
+
+PID 1331 (Process: panel-14-systra) matches rule 'BKDR_XZUtil_Binary_CVE_2024_3094_Mar24_1' with strings:
+  - $op1
+  - $op2
+  - $op3
+  - $xc1
+
+PID 1330 (Process: panel-13-cpugra) matches rule 'BKDR_XZUtil_Binary_CVE_2024_3094_Mar24_1' with strings:
+  - $op1
+  - $op2
+  - $op3
+  - $xc1
+
+PID 1301 (Process: xfsettingsd) matches rule 'BKDR_XZUtil_Binary_CVE_2024_3094_Mar24_1' with strings:
+  - $op1
+  - $op2
+  - $op3
+  - $xc1
+
+PID 1311 (Process: xfce4-panel) matches rule 'BKDR_XZUtil_Binary_CVE_2024_3094_Mar24_1' with strings:
+  - $op1
+  - $op2
+  - $op3
+  - $xc1
+
+PID 1332 (Process: panel-15-genmon) matches rule 'BKDR_XZUtil_Binary_CVE_2024_3094_Mar24_1' with strings:
+  - $op1
+  - $op2
+  - $op3
+  - $xc1
+
+PID 1158 (Process: wireplumber) matches rule 'BKDR_XZUtil_Binary_CVE_2024_3094_Mar24_1' with strings:
+  - $op1
+  - $op2
+  - $op3
+  - $xc1
+
+PID 1326 (Process: panel-1-whisker) matches rule 'BKDR_XZUtil_Binary_CVE_2024_3094_Mar24_1' with strings:
+  - $op1
+  - $op2
+  - $op3
+  - $xc1
+
+PID 1316 (Process: Thunar) matches rule 'BKDR_XZUtil_Binary_CVE_2024_3094_Mar24_1' with strings:
+  - $op1
+  - $op2
+  - $op3
+  - $xc1
+
+PID 1322 (Process: xfdesktop) matches rule 'BKDR_XZUtil_Binary_CVE_2024_3094_Mar24_1' with strings:
+  - $op1
+  - $op2
+  - $op3
+  - $xc1
+
+PID 1334 (Process: panel-17-notifi) matches rule 'BKDR_XZUtil_Binary_CVE_2024_3094_Mar24_1' with strings:
+  - $op1
+  - $op2
+  - $op3
+  - $xc1
+
+PID 1333 (Process: panel-16-pulsea) matches rule 'BKDR_XZUtil_Binary_CVE_2024_3094_Mar24_1' with strings:
+  - $op1
+  - $op2
+  - $op3
+  - $xc1
+
+PID 1335 (Process: panel-18-power-) matches rule 'BKDR_XZUtil_Binary_CVE_2024_3094_Mar24_1' with strings:
+  - $op1
+  - $op2
+  - $op3
+  - $xc1
+
+PID 1359 (Process: xfce4-power-manager) matches rule 'BKDR_XZUtil_Binary_CVE_2024_3094_Mar24_1' with strings:
+  - $op1
+  - $op2
+  - $op3
+  - $xc1
+
+PID 1375 (Process: xfce4-notifyd) matches rule 'BKDR_XZUtil_Binary_CVE_2024_3094_Mar24_1' with strings:
+  - $op1
+  - $op2
+  - $op3
+  - $xc1
+
+PID 1397 (Process: polkit-gnome-authentication-agent-1) matches rule 'BKDR_XZUtil_Binary_CVE_2024_3094_Mar24_1' with strings:
+  - $op1
+  - $op2
+  - $op3
+  - $xc1
+
+PID 1396 (Process: light-locker) matches rule 'BKDR_XZUtil_Binary_CVE_2024_3094_Mar24_1' with strings:
+  - $op1
+  - $op2
+  - $op3
+  - $xc1
+
+PID 1502 (Process: pcscd) matches rule 'BKDR_XZUtil_Binary_CVE_2024_3094_Mar24_1' with strings:
+  - $op1
+  - $op2
+  - $op3
+  - $xc1
+
+PID 1501 (Process: colord) matches rule 'BKDR_XZUtil_Binary_CVE_2024_3094_Mar24_1' with strings:
+  - $op1
+  - $op2
+  - $op3
+  - $xc1
+
+PID 1336 (Process: panel-22-action) matches rule 'BKDR_XZUtil_Binary_CVE_2024_3094_Mar24_1' with strings:
+  - $op1
+  - $op2
+  - $op3
+  - $xc1
+
+PID 1400 (Process: vmtoolsd) matches rule 'BKDR_XZUtil_Binary_CVE_2024_3094_Mar24_1' with strings:
+  - $op1
+  - $op2
+  - $op3
+  - $xc1
+
+PID 1651 (Process: obexd) matches rule 'BKDR_XZUtil_Binary_CVE_2024_3094_Mar24_1' with strings:
+  - $op1
+  - $op2
+  - $op3
+  - $xc1
+
+PID 1564 (Process: udisksd) matches rule 'BKDR_XZUtil_Binary_CVE_2024_3094_Mar24_1' with strings:
+  - $op1
+  - $op2
+  - $op3
+  - $xc1
+
+PID 1546 (Process: gvfs-udisks2-volume-monitor) matches rule 'BKDR_XZUtil_Binary_CVE_2024_3094_Mar24_1' with strings:
+  - $op1
+  - $op2
+  - $op3
+  - $xc1
+
+PID 1800 (Process: xdg-document-portal) matches rule 'BKDR_XZUtil_Binary_CVE_2024_3094_Mar24_1' with strings:
+  - $op1
+  - $op2
+  - $op3
+  - $xc1
+
+PID 1423 (Process: blueman-applet) matches rule 'BKDR_XZUtil_Binary_CVE_2024_3094_Mar24_1' with strings:
+  - $op1
+  - $op2
+  - $op3
+  - $xc1
+
+PID 1804 (Process: xdg-permission-store) matches rule 'BKDR_XZUtil_Binary_CVE_2024_3094_Mar24_1' with strings:
+  - $op1
+  - $op2
+  - $op3
+  - $xc1
+
+PID 1795 (Process: xdg-desktop-portal) matches rule 'BKDR_XZUtil_Binary_CVE_2024_3094_Mar24_1' with strings:
+  - $op1
+  - $op2
+  - $op3
+  - $xc1
+
+PID 3042 (Process: gvfsd-dnssd) matches rule 'BKDR_XZUtil_Binary_CVE_2024_3094_Mar24_1' with strings:
+  - $op1
+  - $op2
+  - $op3
+  - $xc1
+
+PID 1427 (Process: nm-applet) matches rule 'BKDR_XZUtil_Binary_CVE_2024_3094_Mar24_1' with strings:
+  - $op1
+  - $op2
+  - $op3
+  - $xc1
+
+PID 1815 (Process: xdg-desktop-portal-gtk) matches rule 'BKDR_XZUtil_Binary_CVE_2024_3094_Mar24_1' with strings:
+  - $op1
+  - $op2
+  - $op3
+  - $xc1
+
+PID 1857 (Process: Socket Process) matches rule 'BKDR_XZUtil_Binary_CVE_2024_3094_Mar24_1' with strings:
+  - $op1
+  - $op2
+  - $op3
+  - $xc1
+
+PID 1904 (Process: Privileged Cont) matches rule 'BKDR_XZUtil_Binary_CVE_2024_3094_Mar24_1' with strings:
+  - $op1
+  - $op2
+  - $op3
+  - $xc1
+
+PID 1998 (Process: WebExtensions) matches rule 'BKDR_XZUtil_Binary_CVE_2024_3094_Mar24_1' with strings:
+  - $op1
+  - $op2
+  - $op3
+  - $xc1
+
+PID 13861 (Process: Isolated Web Co) matches rule 'BKDR_XZUtil_Binary_CVE_2024_3094_Mar24_1' with strings:
+  - $op1
+  - $op2
+  - $op3
+  - $xc1
+
+PID 18424 (Process: sd_espeak-ng) matches rule 'BKDR_XZUtil_Binary_CVE_2024_3094_Mar24_1' with strings:
+  - $op1
+  - $op2
+  - $op3
+  - $xc1
+
+PID 13819 (Process: Isolated Web Co) matches rule 'BKDR_XZUtil_Binary_CVE_2024_3094_Mar24_1' with strings:
+  - $op1
+  - $op2
+  - $op3
+  - $xc1
+
+PID 18435 (Process: sd_dummy) matches rule 'BKDR_XZUtil_Binary_CVE_2024_3094_Mar24_1' with strings:
+  - $op1
+  - $op2
+  - $op3
+  - $xc1
+
+PID 14072 (Process: Utility Process) matches rule 'BKDR_XZUtil_Binary_CVE_2024_3094_Mar24_1' with strings:
+  - $op1
+  - $op2
+  - $op3
+  - $xc1
+
+PID 14113 (Process: Isolated Web Co) matches rule 'BKDR_XZUtil_Binary_CVE_2024_3094_Mar24_1' with strings:
+  - $op1
+  - $op2
+  - $op3
+  - $xc1
+
+PID 8105 (Process: Isolated Web Co) matches rule 'BKDR_XZUtil_Binary_CVE_2024_3094_Mar24_1' with strings:
+  - $op1
+  - $op2
+  - $op3
+  - $xc1
+
+PID 18248 (Process: Isolated Web Co) matches rule 'BKDR_XZUtil_Binary_CVE_2024_3094_Mar24_1' with strings:
+  - $op1
+  - $op2
+  - $op3
+  - $xc1
+
+PID 14053 (Process: RDD Process) matches rule 'BKDR_XZUtil_Binary_CVE_2024_3094_Mar24_1' with strings:
+  - $op1
+  - $op2
+  - $op3
+  - $xc1
+
+PID 19302 (Process: python3) matches rule 'BKDR_XZUtil_Binary_CVE_2024_3094_Mar24_1' with strings:
+  - $op1
+  - $op2
+  - $op3
+  - $xc1
+
+PID 19064 (Process: tumblerd) matches rule 'BKDR_XZUtil_Binary_CVE_2024_3094_Mar24_1' with strings:
+  - $op1
+  - $op2
+  - $op3
+  - $xc1
+
+PID 18135 (Process: Isolated Web Co) matches rule 'BKDR_XZUtil_Binary_CVE_2024_3094_Mar24_1' with strings:
+  - $op1
+  - $op2
+  - $op3
+  - $xc1
+
+PID 18380 (Process: Web Content) matches rule 'BKDR_XZUtil_Binary_CVE_2024_3094_Mar24_1' with strings:
+  - $op1
+  - $op2
+  - $op3
+  - $xc1
+
+PID 18253 (Process: Isolated Web Co) matches rule 'BKDR_XZUtil_Binary_CVE_2024_3094_Mar24_1' with strings:
+  - $op1
+  - $op2
+  - $op3
+  - $xc1
+
+PID 18376 (Process: Web Content) matches rule 'BKDR_XZUtil_Binary_CVE_2024_3094_Mar24_1' with strings:
+  - $op1
+  - $op2
+  - $op3
+  - $xc1
+
+PID 1751 (Process: firefox-esr) matches rule 'BKDR_XZUtil_Binary_CVE_2024_3094_Mar24_1' with strings:
+  - $op1
+  - $op2
+  - $op3
+  - $xc1
+
+PID 18476 (Process: Web Content) matches rule 'BKDR_XZUtil_Binary_CVE_2024_3094_Mar24_1' with strings:
+  - $op1
+  - $op2
+  - $op3
+  - $xc1
+
+
+Total scan time: 8.29 seconds

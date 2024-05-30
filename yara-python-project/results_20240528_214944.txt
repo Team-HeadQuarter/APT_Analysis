@@ -1,0 +1,8 @@
+file /lib/x86_64-linux-gnu/liblzma.so.5.6.1 matches rule 'BKDR_XZUtil_Binary_CVE_2024_3094_Mar24_1 with string:
+   - $op1
+   - $op2
+   - $op3
+   - $xc1
+
+
+Total scan time: 0.01 seconds
